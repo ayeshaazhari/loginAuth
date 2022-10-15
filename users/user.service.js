@@ -15,8 +15,6 @@ module.exports = {
 };
 
 async function authenticate({ username, password }) {
-    console.log("authenticate");
-
     const user = await User.findOne({ username });
     if (user && bcrypt.compareSync(password, user.hash)) {
         user.logintime = Date.now();
@@ -50,7 +48,6 @@ async function create(userParam) {
     if (userParam.password) {
         user.hash = bcrypt.hashSync(userParam.password, 10);
     }
-    console.log(user)
     // save user
     await user.save();
 }
@@ -80,12 +77,10 @@ async function _delete(id) {
 }
 
 async function logout(id) {
-    console.log(id)
     const user = await User.findById(id);
 
     // validate
     if (!user) throw 'User not found';
     user.logouttime = Date.now();
-    console.log(user)
     await user.save();
 }
