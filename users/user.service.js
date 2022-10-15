@@ -10,17 +10,22 @@ module.exports = {
     getById,
     create,
     update,
-    delete: _delete
+    delete: _delete,
+    logout
 };
 
 async function authenticate({ username, password }) {
+    console.log("authenticate");
+
     const user = await User.findOne({ username });
     if (user && bcrypt.compareSync(password, user.hash)) {
+        user.logintime = Date.now();
+        user.save();
         const { hash, ...userWithoutHash } = user.toObject();
         const token = jwt.sign({ sub: user.id }, config.secret);
         return {
             ...userWithoutHash,
-            token
+            token,
         };
     }
 }
@@ -45,7 +50,7 @@ async function create(userParam) {
     if (userParam.password) {
         user.hash = bcrypt.hashSync(userParam.password, 10);
     }
-
+    console.log(user)
     // save user
     await user.save();
 }
@@ -72,4 +77,15 @@ async function update(id, userParam) {
 
 async function _delete(id) {
     await User.findByIdAndRemove(id);
+}
+
+async function logout(id) {
+    console.log(id)
+    const user = await User.findById(id);
+
+    // validate
+    if (!user) throw 'User not found';
+    user.logouttime = Date.now();
+    console.log(user)
+    await user.save();
 }

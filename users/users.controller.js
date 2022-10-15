@@ -5,6 +5,7 @@ const userService = require('./user.service');
 // routes
 router.post('/authenticate', authenticate);
 router.post('/register', register);
+router.put('/logout',logout)
 router.get('/', getAll);
 router.get('/current', getCurrent);
 router.get('/:id', getById);
@@ -15,7 +16,14 @@ module.exports = router;
 
 function authenticate(req, res, next) {
     userService.authenticate(req.body)
-        .then(user => user ? res.json(user) : res.status(400).json({ message: 'Username or password is incorrect' }))
+    .then((user) => {
+        if(user){
+           res.json(user)
+        } else {
+        console.log("pass is incorrect");
+        res.status(400).json({ message: 'Username or password is incorrect' })
+        }
+    })
         .catch(err => next(err));
 }
 
@@ -51,6 +59,12 @@ function update(req, res, next) {
 
 function _delete(req, res, next) {
     userService.delete(req.params.id)
+        .then(() => res.json({}))
+        .catch(err => next(err));
+}
+
+function logout(req, res, next) {
+    userService.logout(req.body.id)
         .then(() => res.json({}))
         .catch(err => next(err));
 }
