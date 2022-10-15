@@ -1,0 +1,33 @@
+﻿<h3>List of users with their roles and login and logout time</h3>
+
+
+<div class="m-3">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col" >User Name</th>
+          <th scope="col" >Role</th>
+          <th scope="col" >Login time</th>
+          <th scope="col" >Logout time</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of users | slice: (page-1) * pageSize : (page-1) * pageSize + pageSize; index as i">
+            <th scope="row">{{ (page -1) * pageSize + i + 1 }}</th>
+            <td>{{user.username}}</td>
+            <td>{{user.role}}</td>
+            <td>{{user.logintime}}</td>
+            <td>{{ user.logouttime}}</td>
+          </tr>
+      </tbody>
+    </table>
+
+    <ngb-pagination
+     [pageSize] = "pageSize"
+      [collectionSize]="collectionSize"
+       [(page)]="page" 
+       aria-label="Default pagination"
+       class="d-flex justify-content-center">
+    </ngb-pagination>
+  </div>

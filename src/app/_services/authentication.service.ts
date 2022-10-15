@@ -30,8 +30,11 @@ export class AuthenticationService {
     }
 
     logout() {
-        // remove user from local storage and set current user to null
+        let luser = JSON.parse(localStorage.getItem('currentUser'));
+        let id = luser._id;
+        this.http.put<any>(`${config.apiUrl}/users/logout`,{id:id},{});
+          // remove user from local storage and set current user to null
         localStorage.removeItem('currentUser');
-        this.currentUserSubject.next(null);
+        this.currentUserSubject.next(null); 
     }
 }

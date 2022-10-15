@@ -2,7 +2,7 @@
 import { Router } from '@angular/router';
 
 import { AuthenticationService } from './_services';
-import { User } from './_models';
+import { User, Role } from './_models';
 
 import './_content/app.less';
 
@@ -17,8 +17,14 @@ export class AppComponent {
         this.authenticationService.currentUser.subscribe(x => this.currentUser = x);
     }
 
-    logout() {
-        this.authenticationService.logout();
-        this.router.navigate(['/login']);
+    get isAdmin() {
+        return this.currentUser && this.currentUser.role === Role.Admin;
     }
+
+    logout() {
+       this.authenticationService.logout();
+         this.router.navigate(['/login']);
+    }
+
+   
 }
